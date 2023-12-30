@@ -1,13 +1,7 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  ActivityIndicator,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -16,51 +10,39 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+import {setupPlayer, addTrack} from '../musicPlayerServices';
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [isPlayerReady, setIsPlayerReady] = useState(false);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  async function setup() {
+    let isSetup = await setupPlayer();
+    if (isSetup) {
+      await addTrack();
+    }
+    setIsPlayerReady(isSetup);
+  }
+
+  useEffect(() => {
+    setup();
+  }, []);
+
+  if (!isPlayerReady) {
+    return (
+      <SafeAreaView>
+        <ActivityIndicator />
+      </SafeAreaView>
+    );
+  }
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <SafeAreaView>
       <StatusBar />
       <Text>Testing seems ok</Text>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+const styles = StyleSheet.create({});
 
 export default App;
