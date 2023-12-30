@@ -38,7 +38,7 @@ function App(): React.JSX.Element {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={'light-content'} />
+      <StatusBar barStyle={'light-content'} backgroundColor={'black'} />
       <MusicPlayer />
     </View>
   );
